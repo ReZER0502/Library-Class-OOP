@@ -1,0 +1,99 @@
+#Add MySQL to retrieve data
+#Improve design logics
+
+class Library:
+    def __init__(self):
+        self.my_books = []
+        self.my_borrowees = []
+
+    def add_book(self, title, author):
+        books = {"Title": title, "Author": author, "is_borrowed": False, "is_published": True}
+        self.my_books.append(books)
+        print(f"\nYou have added a new book {title} by {author}")
+
+    def view_all(self):
+        for x in self.my_books:
+            title = x.get("Title")
+            author = x.get("Author")
+            print(f'Title: {title} by {author}')
+
+        if not self.my_books:
+            print('My apologies Dear user. There are no books present yet...')
+     
+    def borrow(self, my_book, borrower):
+        found = False 
+        for g in self.my_books:
+            if g.get("Title") == my_book:  
+                found = True 
+                if g.get("is_published"):  
+                    the_author = g.get("Author")
+                    if not g.get("is_borrowed"):
+                        print(f'You have borrowed {my_book} by {the_author}')
+                        data_log = {"Client": borrower, "Title": my_book} 
+                        self.my_borrowees.append(data_log)
+                        g["is_borrowed"] = True
+                    else:
+                        for personas in self.my_borrowees:
+                            if personas.get("Title") == my_book:
+                                person = personas.get("Client")
+                                print(f"I'm sorry. {person} has borrowed the {my_book} by {the_author}")
+                else:
+                    print(f'{my_book} is not yet published.')
+
+        if not found:
+            print(f'The book "{my_book}" was not found in the library.')
+
+
+    def i_return(self, i_title, returnee):
+        for y in self.my_books:
+            my_title = y.get("Title")
+            my_author = y.get("Author")
+            if i_title == my_title:
+                for returnees in self.my_borrowees:
+
+                    if returnees.get("Client") ==  returnee:
+                        print(f'{returnee} has returned the book {my_title} by {my_author}')
+                        y["is_borrowed"] = False
+                        del returnees
+                        break
+
+                    elif returnees.get("Client") != returnee:
+                        print("I'm sorry. Please have the original borrower return the book.")
+
+           
+
+print('Welcome to the Library System\n')
+print('1. Add a new book')
+print('2. View all books')
+print('3. Borrow a book')
+print('4. Return a book')
+print('5. Exit\n')
+
+my_library = Library()
+while True:
+    try:
+        user_request = int(input('\nChoose an option: '))
+        if user_request == 1:
+            my_title = input('\nEnter Title: ')
+            my_author = input('Enter Author: ')
+            my_library.add_book(my_title, my_author)
+
+        elif user_request == 2:
+            my_library.view_all()
+
+        elif user_request == 3:
+            i_borrow = input('Please state your name: ')
+            i_book = input('Please state the book that you want to borrow: ')
+            my_library.borrow(i_book, i_borrow)
+
+        elif user_request == 4:
+            my_name = input('State your name: ')
+            book_return = input('Which book are you returning?: ')
+            my_library.i_return(book_return, my_name)
+
+        elif user_request == 5:
+            print('Thank you for using My Library System. Have a nice day.')
+            break
+
+    except ValueError:
+        print('Please choose the numbers mentioned above...')
